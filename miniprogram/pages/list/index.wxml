@@ -1,2 +1,4 @@
 <!--pages/list/index.wxml-->
-<text>pages/list/index.wxml</text>
+<view class="main">
+  <van-button type="primary">按钮</van-button>
+</view>

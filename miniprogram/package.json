@@ -1,0 +1,17 @@
+{
+  "name": "miniprogram",
+  "version": "1.0.0",
+  "description": "to help us manage Balance of payments",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "release500",
+  "license": "ISC",
+  "dependencies": {
+    "@vant/weapp": "^1.10.5"
+  },
+  "devDependencies": {
+    "miniprogram-api-typings": "^3.6.0"
+  }
+}
