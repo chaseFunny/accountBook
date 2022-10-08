@@ -1,2 +1,12 @@
-<!--pages/record/index.wxml-->
-<text>记一笔吧！</text>
+<view class="whiteMain">
+  <van-notice-bar
+    color="#1989fa"
+    background="#ecf9ff"
+    left-icon="info-o"
+    text="记录金钱流动的方向" />
+    <view class="title">记一笔</view>
+  <view class="record">
+    <van-button class="btn" type="primary" plain bind:click='goRecordPage' id='1'>收入</van-button>
+    <van-button class="btn"  type="info" plain bind:click='goRecordPage' id='0'>支出</van-button>
+  </view>
+</view>

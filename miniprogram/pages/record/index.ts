@@ -1,4 +1,7 @@
 Component({
+  options: {
+    styleIsolation: 'shared',
+  },
   lifetimes: {
     attached: function(){
       console.log(1);
@@ -12,8 +15,13 @@ Component({
           selected: 1
         })
       }
-      // 跳转到实际的页面
-      
+    }
+  },
+  methods: {
+    goRecordPage(e){
+        wx.navigateTo({
+          url: '../recordPage/index?id='+e.target.id,
+        })
     }
   }
 })

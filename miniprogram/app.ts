@@ -1,20 +1,53 @@
 // app.js
+const {getCludeFunc : gcf} = require('./utils/index.js')
 App({
-  onLaunch: function () {
+  globalData: {
+    appID: '',
+    openID: '',
+    allNum: '',
+    payAll: '',
+    selfGianWay: '',
+    selfGainFrom: '',
+  },
+  onLaunch: function (options) {
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力');
     } else {
       wx.cloud.init({
-        // env 参数说明：
-        //   env 参数决定接下来小程序发起的云开发调用（wx.cloud.xxx）会默认请求到哪个云环境的资源
-        //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
-        //   如不填则使用默认环境（第一个创建的环境）
         env: 'fpzh-0gc2lpkadbbf45da',
-        // 是否在将用户访问记录到用户管理中，在控制台中可见
         traceUser: true,
       });
     }
-
-    this.globalData = {};
+    let that = this;
+    // 判断是否由分享进入小程序  从分享进入小程序时 返回上一级按钮不应该存在
+    if ( options.scene == 1007 || options.scene == 1008) {
+      that.globalData.isShare = true;
+    } else {
+      that.globalData.isShare = false;
+    };
+    let id = wx.getStorage('openid' as any);
+    // 获取用户信息
+    if(!wx.getStorageSync('userInfo')){
+      gcf('getUserID', {}).then(res=>{
+        console.log(res, 'res');
+        const {openid, appid} = res.result
+        that.globalData.openID = openid
+        that.globalData.appID = appid
+        wx.setStorageSync('openid', openid)
+        id = openid
+        // 查看用户信息是否创建，没有的话，新建
+      })
+    }
+    wx.cloud.callFunction({
+      name: 'commonGain', 
+      data: {
+         name: 'userInfo',
+         queryObj: {
+           openID: id,
+         }
+       }
+     }).then(result=>{
+      console.log(result, 'result')
+    })
   }
 });

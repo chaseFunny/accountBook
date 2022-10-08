@@ -1,2 +1,18 @@
-<!--pages/recordPage/index.wxml-->
-<text>pages/recordPage/index.wxml</text>
+<view class="pageMain">
+ <!-- {{isIncome}} -->
+ <view class="nav">
+  <van-icon name="records" size="30px" color="#3798fc" />
+  {{ isIncome ? '收入' : '支出'}}
+ </view>
+ <view class="content">
+  <view class="gain">
+    <van-cell-group>
+      <van-field
+        model:value="{{  }}"
+        placeholder="请输入用户名"
+        border="{{ false }}"
+      />
+    </van-cell-group>
+  </view>
+ </view>
+</view>
