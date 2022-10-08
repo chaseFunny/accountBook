@@ -25,7 +25,7 @@ App({
     } else {
       that.globalData.isShare = false;
     };
-    let id = wx.getStorage('openid' as any);
+    let id = wx.getStorageSync('openid');
     // 获取用户信息
     if(!wx.getStorageSync('userInfo')){
       gcf('getUserID', {}).then(res=>{
@@ -46,8 +46,21 @@ App({
            openID: id,
          }
        }
-     }).then(result=>{
+     }).then((result: any)=>{
       console.log(result, 'result')
+      if(result.result.data.length <= 0){
+        gcf('commonAdd', {
+          name: 'userInfo',
+          queryObj: {
+            openID: id,
+            allNum: 0,
+            payAll: 0,
+            selfGianWay: [],
+            selfGainFrom: [],
+            _createTime: Date.parse(new Date() as any),
+          }
+        })
+      }
     })
   }
 });
