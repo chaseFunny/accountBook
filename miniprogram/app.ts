@@ -4,10 +4,11 @@ App({
   globalData: {
     appID: '',
     openID: '',
-    allNum: '',
-    payAll: '',
-    selfGianWay: '',
-    selfGainFrom: '',
+    allNum: '', // 记录总数
+    payAll: '', // 记录支出总次数
+    selfGianWay: '', // 自定义渠道
+    selfGainFrom: '', // 自定义收入来源
+    selfPayWay: '', // 自定义支出用途
   },
   onLaunch: function (options) {
     if (!wx.cloud) {
@@ -35,9 +36,9 @@ App({
         that.globalData.appID = appid
         wx.setStorageSync('openid', openid)
         id = openid
-        // 查看用户信息是否创建，没有的话，新建
       })
     }
+    // 查看用户信息是否创建，没有的话，新建
     wx.cloud.callFunction({
       name: 'commonGain', 
       data: {
@@ -57,9 +58,17 @@ App({
             payAll: 0,
             selfGianWay: [],
             selfGainFrom: [],
+            selfPayWay: [],
             _createTime: Date.parse(new Date() as any),
           }
         })
+      }else{
+        const {allNum, payAll, selfGainFrom, selfGianWay, selfPayWay} = result.result.data[0]
+        this.globalData.allNum = allNum;
+        this.globalData.payAll = payAll;
+        this.globalData.selfGainFrom = selfGainFrom;
+        this.globalData.selfGianWay = selfGianWay;
+        this.globalData.selfPayWay = selfPayWay;
       }
     })
   }

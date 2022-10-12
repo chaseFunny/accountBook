@@ -5,6 +5,9 @@ interface demoType {
   skill: string
 }
 Component({
+  data: {
+    iconName: 't-icon .t-icon-yinhangka1'
+  },
   methods: {
     fn(a: demoType){
       console.log(a)

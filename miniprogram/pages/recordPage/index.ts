@@ -15,7 +15,26 @@ Page({
       how: '', // 收入来源，支出用途
       note: '', // 备注
     },
-    openId: '' // 用户身份标识
+    openId: '', // 用户身份标识
+    show: false, // 是否展示日期选择器
+    isShow: false, // 渠道，用途，弹出层
+    currIndex: '',
+    minDate: new Date().getTime(),
+    formatter(type, value) {
+      if (type === 'year') {
+        return `${value}年`;
+      }
+      if (type === 'month') {
+        return `${value}月`;
+      }
+      return value;
+    },
+    // 收支选项列表
+    defaultIncomeWay:[{
+      name: '支付宝',
+      key: 'zfb',
+      iconName: 'iconfont '
+    }]
   },
 
   /**
@@ -24,10 +43,54 @@ Page({
   onLoad(options) {
     console.log(options, app.globalData, 'options');
     this.setData({
-      isIncome: Boolean(Number(options.id))
+      isIncome: Boolean(Number(options.id)),
+      model: {
+        date: this.formatDate(new Date().getTime())
+      }
     })
   },
+  // methods
+  onDisplay() {
+    this.setData({ show: true });
+  },
+  onClose() {
+    this.setData({ show: false });
+  },
+  formatDate(timestamp){
+    const date = new Date(timestamp);
+    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+  },
+  onInput(event) {
+    const date = this.formatDate(event.detail)
+    this.setData({
+      model: {
+        date
+      }  
+    });
+  },
+  chooseTime(e){
+    console.log(e);
+    if(e.type === 'confirm'){
+     this.onInput(e)
+    }
+    this.onClose()
+  },
+  /** 选择 */
+  onChoose(e){
+    console.log(e,'eee');
+    if(e.target.id === '1') {
 
+    }
+    this.setData({
+      isShow: true,
+      currIndex: Number(e.target.id)
+    })
+  },
+  closePopup(){
+    this.setData({
+      isShow: false
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */

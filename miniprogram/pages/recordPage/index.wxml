@@ -5,14 +5,63 @@
   {{ isIncome ? '收入' : '支出'}}
  </view>
  <view class="content">
-  <view class="gain">
-    <van-cell-group>
-      <van-field
-        model:value="{{  }}"
-        placeholder="请输入用户名"
-        border="{{ false }}"
+  <van-cell-group>
+    <view class="money">
+      {{ isIncome ? '收入' : '支出'}}金额
+    </view>
+    <van-field
+      label="￥"
+      size="large"
+      title-width="28px"
+      model:value="{{ model.moneyNumber }}"
+      placeholder="填写金额"
+      type="number"
+      border="{{ false }}"
+      class="money1"
+      placeholder-style="font-size:18px; font-weight: 400"
+      maxlength = '9'
+      clickable="{{true}}"
+      custom-style="border-bottom: 2px solid #f8f9fa"
+    />
+    <van-cell title="{{isIncome ? '收入' : '支出'}}日期" value="{{ model.date }}" bind:click="onDisplay" is-link />
+    <van-popup show="{{ show }}"  position="bottom"  round bind:click-overlay="onClose" custom-style="height: 50%">
+      <van-datetime-picker
+        type="date"
+        value="{{ currentDate }}"
+        min-date="{{ minDate }}"
+        formatter="{{ formatter }}"
+        title="{{isIncome ? '收入' : '支出'}}日期"
+        bind:confirm="chooseTime"
+        bind:cancel="chooseTime"
       />
-    </van-cell-group>
-  </view>
- </view>
+    </van-popup>
+    <van-cell title="{{isIncome ? '收入' : '支出'}}渠道" id="1" value="{{ model.way }}" bind:click="onChoose" is-link />
+    <van-popup
+      show="{{isShow}}"
+      position="bottom"  round custom-style="height: 50%"
+      bind:click-overlay="closePopup"
+      closeable
+      bind:close="closePopup"
+    >
+      <view class="chooseItem">
+        <view class="title">{{ isIncome ? '收入' : '支出'}}{{currIndex === 1 ? '渠道' : (isIncome ? '来源' : '用途')}}</view>
+        <view class="flexBox">
+          
+        </view>
+      </view>
+    </van-popup>
+    <van-cell title="{{isIncome ? '收入' : '支出'}}{{isIncome ? '来源' : '用途'}}" id="2" value="{{ model.way }}" bind:click="onChoose" is-link />
+    <van-field
+    value="{{ model.note }}"
+    label="{{isIncome ? '收入' : '支出'}}备注"
+    type="textarea"
+    placeholder="添加备注信息（选填）"
+    autosize
+    class="customNote"
+    border="{{ false }}"
+    title-width="78px"
+  />
+  </van-cell-group>
+</view>
+<van-button type="primary" block custom-style="width:80vw; margin-top: 18px" round>保存</van-button>
 </view>
