@@ -13,7 +13,7 @@
       label="￥"
       size="large"
       title-width="28px"
-      model:value="{{ model.moneyNumber }}"
+      value="{{ model.moneyNumber }}"
       placeholder="填写金额"
       type="number"
       border="{{ false }}"
@@ -22,8 +22,11 @@
       maxlength = '9'
       clickable="{{true}}"
       custom-style="border-bottom: 2px solid #f8f9fa"
+      bind:change="modelChange"
+      id="moneyNumber"
     />
-    <van-cell title="{{isIncome ? '收入' : '支出'}}日期" value="{{ model.date }}" bind:click="onDisplay" is-link />
+    <van-cell title="{{isIncome ? '收入' : '支出'}}日期" value="{{ model.date }}" bind:click="onDisplay" is-link value-class="valueText" />
+
     <van-popup show="{{ show }}"  position="bottom"  round bind:click-overlay="onClose" custom-style="height: 50%">
       <van-datetime-picker
         type="date"
@@ -32,36 +35,48 @@
         formatter="{{ formatter }}"
         title="{{isIncome ? '收入' : '支出'}}日期"
         bind:confirm="chooseTime"
-        bind:cancel="chooseTime"
+        bind:cancel="onClose"
       />
     </van-popup>
-    <van-cell title="{{isIncome ? '收入' : '支出'}}渠道" id="1" value="{{ model.way }}" bind:click="onChoose" is-link />
+
+    <van-cell title="{{isIncome ? '收入' : '支出'}}渠道" id="1" value="{{ model.way }}" bind:click="onChoose" is-link value-class="valueText" />
+
     <van-popup
       show="{{isShow}}"
-      position="bottom"  round custom-style="height: 50%"
+      position="bottom"  round custom-style="height: 60%"
       bind:click-overlay="closePopup"
       closeable
       bind:close="closePopup"
     >
       <view class="chooseItem">
-        <view class="title">{{ isIncome ? '收入' : '支出'}}{{currIndex === 1 ? '渠道' : (isIncome ? '来源' : '用途')}}</view>
+        <view class="title">
+          <text>{{ isIncome ? '收入' : '支出'}}{{currIndex === 1 ? '渠道' : (isIncome ? '来源' : '用途')}}</text>
+          <text style="font-weight:400; color: #666;">去自定义{{ isIncome ? '收入' : '支出'}}{{currIndex === 1 ? '渠道' : (isIncome ? '来源' : '用途')}}>></text>
+        </view>
         <view class="flexBox">
-          
+          <view class="item {{ item.key == currKey.curr && 'currItem'}}" wx:for="{{currList}}" wx:key="key" bindtap="chooseKey" id="{{item.key}}" data-name="{{item.name}}">
+            <view class="itemIcon {{item.iconName}}"></view>
+            <view class="itemName">{{item.name}}</view>
+          </view>
         </view>
       </view>
     </van-popup>
-    <van-cell title="{{isIncome ? '收入' : '支出'}}{{isIncome ? '来源' : '用途'}}" id="2" value="{{ model.way }}" bind:click="onChoose" is-link />
+
+    <van-cell title="{{isIncome ? '收入' : '支出'}}{{isIncome ? '来源' : '用途'}}" id="2" value="{{ model.how }}" bind:click="onChoose" is-link value-class="valueText" />
     <van-field
     value="{{ model.note }}"
     label="{{isIncome ? '收入' : '支出'}}备注"
     type="textarea"
-    placeholder="添加备注信息（选填）"
+    placeholder="备注信息（选填）"
     autosize
     class="customNote"
     border="{{ false }}"
     title-width="78px"
+    bind:change="modelChange"
+    id="note"
   />
   </van-cell-group>
 </view>
-<van-button type="primary" block custom-style="width:80vw; margin-top: 18px" round>保存</van-button>
+<van-button type="primary" block custom-style="width:80vw; margin-top: 18px" round bind:click="onSave">保存</van-button>
+<van-toast id="van-toast" />
 </view>
