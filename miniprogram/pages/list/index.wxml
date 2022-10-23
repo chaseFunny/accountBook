@@ -1,7 +1,27 @@
 <!--pages/list/index.wxml-->
-<view class="main">
-  <view style="display: flex;">
-    <van-button type="primary">按钮</van-button>
-    <icon class="{{iconName}}" style="width: 50px; height: 50px;" />
+<view class="pageMain" style="background: #408ce2;">
+  <view class="box" >
+    <view class="nav">
+      <view class="lf">
+        <text>收支记录 </text> 
+        <van-icon name="arrow-down" />
+      </view>
+      <view class="rg">
+        <van-icon name="underway-o" class="iconf" />
+        <van-icon name="calendar-o" class="iconf" />
+      </view>
+    </view>
+    <view class="inOut">
+      <view class="header">
+        <text>今天 星期二</text>
+        <view class="number">
+          <text>收入<text>￥0.00</text></text>
+          <text>支出<text>￥0.00</text></text>
+        </view>
+      </view>
+      <view class="haveData" wx:if="{{}}">
+        
+      </view>
+    </view>
   </view>
 </view>

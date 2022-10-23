@@ -1,7 +1,10 @@
 // pages/recordPage/index.js
 let app = getApp();
+const db = wx.cloud.database()
+const inOutModel = db.collection('inOutModel')
 import Toast from '@vant/weapp/toast/toast';
 const {getCludeFunc : gcf} = require('../../utils/index.js')
+import dayjs from 'dayjs'
 Page({
 
   /**
@@ -17,6 +20,7 @@ Page({
       how: '', // 收入来源，支出用途
       note: '', // 备注
     },
+    currentDate: new Date().getTime(),
     openId: '', // 用户身份标识
     show: false, // 是否展示日期选择器
     isShow: false, // 渠道，用途，弹出层
@@ -190,12 +194,13 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    console.log(app.globalData, 'options');
+    console.log(app.globalData,dayjs(new Date()), 'options');
     this.setData({
       isIncome: Boolean(Number(options.id)),
       model: {
         date: this.formatDate(new Date().getTime())
-      }
+      },
+      currentDate: this.formatDate(new Date().getTime())
     })
   },
   // methods
@@ -232,13 +237,17 @@ Page({
     this.setData({ show: false });
   },
   formatDate(timestamp){
+    // const date = new Date(timestamp);
     const date = new Date(timestamp);
     return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
   },
   onInput(event) {
+    console.log(event, 'event');
     const date = this.formatDate(event.detail)
+
     this.setData({
-      [`model.date`]:date
+      [`model.date`]: new Date(event).getTime(),
+      currentDate: date
     });
   },
   chooseTime(e){
@@ -275,38 +284,24 @@ Page({
     const isCan = Boolean(moneyNumber && date && way && how)
     if(isCan) {
       // 存储数据
-      const dbName = this.data.isIncome ? 'gainModel' : 'spending'
-      // 参数
-      const params = this.data.isIncome ?{
-        _createTime: Date.parse(new Date() as any),
+      const params = {
+        _createTime: Date.parse(new Date()),
         userID: app.globalData.openID,
-        gainNum: moneyNumber,
-        gainDate: date,
-        gainWay: way,
-        gainSource: how,
+        isIncome: this.data.isIncome,
+        money: moneyNumber,
+        recordTime: date,
+        way: way,
+        where: how,
         note
-      } : 
-      {
-        _createTime: Date.parse(new Date() as any),
-        userID: app.globalData.openID,
-        sendMoney: moneyNumber,
-        sendTime: date,
-        sendWay: way,
-        sendWhy: how,
-        sendNote: note
       }
-      gcf('commonAdd', {
-        name: dbName,
-        queryObj: params
-      }).then(res=>{
-        console.log(res,'res');
-        if(res.errMsg == "cloud.callFunction:ok"){
+      inOutModel.add({ data: params }).then((res)=>{
+        console.log(res,'resssss');
+        if(res.errMsg == "collection.add:ok"){
           wx.switchTab({
             url: '../list/index',
-          })
-        }else{
-          Toast.fail('网络异常，请重试');
-        }
+          })}else{
+            Toast.fail('网络异常，请重试');
+          }
       })
       // 跳转
     }else{

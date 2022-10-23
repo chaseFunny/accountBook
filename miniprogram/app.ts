@@ -9,6 +9,7 @@ App({
     selfGianWay: '', // 自定义渠道
     selfGainFrom: '', // 自定义收入来源
     selfPayWay: '', // 自定义支出用途
+    isRemand: '', //是否设置提醒
   },
   onLaunch: function (options) {
     if (!wx.cloud) {
@@ -30,7 +31,6 @@ App({
     // 获取用户信息
     if(!wx.getStorageSync('userInfo')){
       gcf('getUserID', {}).then(res=>{
-        console.log(res, 'res');
         const {openid, appid} = res.result
         that.globalData.openID = openid
         that.globalData.appID = appid
@@ -38,6 +38,8 @@ App({
         id = openid
       })
     }
+    console.log(id, 'ididid');
+    
     // 查看用户信息是否创建，没有的话，新建
     wx.cloud.callFunction({
       name: 'commonGain', 
@@ -59,16 +61,18 @@ App({
             selfGianWay: [],
             selfGainFrom: [],
             selfPayWay: [],
+            isRemand: false,
             _createTime: Date.parse(new Date() as any),
           }
         })
       }else{
-        const {allNum, payAll, selfGainFrom, selfGianWay, selfPayWay} = result.result.data[0]
+        const {allNum, payAll, selfGainFrom, selfGianWay, selfPayWay, isRemand} = result.result.data[0]
         this.globalData.allNum = allNum;
         this.globalData.payAll = payAll;
         this.globalData.selfGainFrom = selfGainFrom;
         this.globalData.selfGianWay = selfGianWay;
         this.globalData.selfPayWay = selfPayWay;
+        this.globalData.isRemand = isRemand;
       }
     })
   }

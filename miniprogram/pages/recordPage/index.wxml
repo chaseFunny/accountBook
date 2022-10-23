@@ -25,7 +25,7 @@
       bind:change="modelChange"
       id="moneyNumber"
     />
-    <van-cell title="{{isIncome ? '收入' : '支出'}}日期" value="{{ model.date }}" bind:click="onDisplay" is-link value-class="valueText" />
+    <van-cell title="{{isIncome ? '收入' : '支出'}}日期" value="{{ currentDate }}" bind:click="onDisplay" is-link value-class="valueText" />
 
     <van-popup show="{{ show }}"  position="bottom"  round bind:click-overlay="onClose" custom-style="height: 50%">
       <van-datetime-picker

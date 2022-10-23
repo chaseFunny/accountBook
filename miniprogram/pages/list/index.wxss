@@ -1,0 +1,17 @@
+.box {
+  padding: 10px;
+  color: #fff;
+}
+.box .nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.box .nav .lf {
+  font-weight: bold;
+}
+.box .nav .rg .iconf {
+  font-size: 22px;
+  font-weight: 400;
+  margin-left: 10px;
+}
