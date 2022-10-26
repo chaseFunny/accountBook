@@ -15,3 +15,17 @@
   font-weight: 400;
   margin-left: 10px;
 }
+.box .inOut {
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background-color: pink;
+}
+.box .inOut .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.box .inOut .number {
+  display: flex;
+  flex-direction: column;
+}

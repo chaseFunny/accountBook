@@ -11,16 +11,28 @@
         <van-icon name="calendar-o" class="iconf" />
       </view>
     </view>
-    <view class="inOut">
+    <view class="inOut" wx:for="{{loadList}}" wx:if="{{item !== null}}" wx:key="index">
       <view class="header">
-        <text>今天 星期二</text>
+        <view>
+          <text class="day">{{item.date[0]}}</text>
+          <text class="weekday">{{item.date[1]}}</text>
+        </view>
         <view class="number">
-          <text>收入<text>￥0.00</text></text>
-          <text>支出<text>￥0.00</text></text>
+          <text>收入<text>￥{{item.income}}</text></text>
+          <text>支出<text>￥{{item.spending}}</text></text>
         </view>
       </view>
-      <view class="haveData" wx:if="{{}}">
-        
+      <view class="dataList">
+        <view class="item" wx:for="{{item.list}}" wx:key="_id">
+          <view class="lf">
+            <view class="circle"></view>
+            <view class="text">
+              <view class="way">{{item.way}}</view>
+              <view class="where">{{item.where}}</view>
+            </view>
+          </view>
+          <view class="rg">{{item.money}}</view>
+        </view>
       </view>
     </view>
   </view>
