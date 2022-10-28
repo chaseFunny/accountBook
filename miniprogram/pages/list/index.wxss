@@ -16,17 +16,76 @@
   font-weight: 400;
   margin-left: 10px;
 }
+.box .infinite {
+  height: calc(100vh - 128px);
+}
 .box .inOut {
   margin-bottom: 16px;
   border-radius: 8px;
-  background-color: pink;
+  background-color: #fff;
+  color: #000;
+  padding: 10px 16px;
 }
 .box .inOut .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+.box .inOut .date {
+  display: flex;
+  align-items: center;
+}
+.box .inOut .date .day {
+  font-size: 19px;
+  margin-right: 8px;
+}
+.box .inOut .date .weekday {
+  font-size: 16px;
+  color: rgba(69, 90, 100, 0.6);
+}
 .box .inOut .number {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
+}
+.box .inOut .number .label {
+  color: rgba(69, 90, 100, 0.6);
+  font-size: 14px;
+}
+.box .inOut .number .money {
+  color: #000;
+}
+.box .dataList .item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.box .dataList .lf {
+  display: flex;
+  justify-content: flex-start;
+}
+.box .dataList .lf .text {
+  display: flex;
+  flex-direction: column;
+}
+.box .dataList .lf .way {
+  font-size: 16px;
+}
+.box .dataList .lf .where {
+  font-size: 12px;
+}
+.box .dataList .red {
+  color: #e04750;
+}
+.box .dataList .rg {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 17px;
+}
+.box .itemIcon {
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+  margin-right: 4px;
 }

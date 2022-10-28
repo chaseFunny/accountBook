@@ -36,3 +36,8 @@ page {
   height: 100vh;
   background: #0076f6;
 }
+/* 小字体 */
+.smallWord {
+  font-size: 16px;
+  color: rgba(69, 90, 100, 0.6);  
+}

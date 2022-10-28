@@ -153,9 +153,24 @@ var weekMap = [
   '星期五',
   '星期六',
 ]
+function formatNum(value){
+  var roundNum = Math.round(parseFloat(value) * 100) / 100;
+  var arr = roundNum.toString().split(".");
+  if(arr.length== 1){
+    roundNum = roundNum.toString() + ".00";
+    return roundNum;
+  }
+  if (arr.length > 1) {
+    if (arr[1].length < 2) {
+      roundNum = roundNum.toString() + "0";
+    }
+    return roundNum;
+  }
+}
 module.exports = {
   defaultIncomeWay,
   defaultIncomePath,
   defaultPayTo,
-  weekMap
+  weekMap,
+  formatNum
 }

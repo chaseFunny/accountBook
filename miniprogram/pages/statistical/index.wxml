@@ -1,2 +1,4 @@
 <!--pages/statistical/index.wxml-->
-<text>pages/statistical/index.wxml</text>
+<view class="pageMain" style="background: #408ce2;">
+  <f2 class="f2-chart" onInit="{{onInitChart}}" />
+</view>

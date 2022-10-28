@@ -9,10 +9,12 @@
   "author": "release500",
   "license": "ISC",
   "dependencies": {
+    "@antv/wx-f2": "^2.1.1",
     "@vant/weapp": "^1.10.5",
     "dayjs": "^1.11.6"
   },
   "devDependencies": {
     "miniprogram-api-typings": "^3.6.0"
-  }
+  },
+  "keywords": []
 }

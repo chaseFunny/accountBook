@@ -1,6 +1,6 @@
 <!--pages/list/index.wxml-->
 <view class="pageMain" style="background: #408ce2;">
-  <view class="box" >
+  <view class="box">
     <view class="nav">
       <view class="lf">
         <text>收支记录 </text> 
@@ -11,29 +11,43 @@
         <van-icon name="calendar-o" class="iconf" />
       </view>
     </view>
-    <view class="inOut" wx:for="{{loadList}}" wx:if="{{item !== null}}" wx:key="index">
+    <scroll-view scroll-y="true" class="infinite" bindscrolltolower="lower"
+    refresher-enabled
+    bindrefresherrefresh ="bindLoadingNew"
+    refresher-triggered ="{{isMoveToUp}}" 
+    bounces>
+      <view wx:for="{{loadList}}"  wx:key="index">
+      <view wx:if="{{item != null}}" class="inOut">
       <view class="header">
-        <view>
+        <view class="date">
           <text class="day">{{item.date[0]}}</text>
           <text class="weekday">{{item.date[1]}}</text>
         </view>
+
         <view class="number">
-          <text>收入<text>￥{{item.income}}</text></text>
-          <text>支出<text>￥{{item.spending}}</text></text>
+          <text class="label">收入<text class="money">￥{{item.income}}</text></text>
+          <text class="label">支出<text class="money">￥{{item.spending}}</text></text>
         </view>
       </view>
+      <van-divider />
       <view class="dataList">
         <view class="item" wx:for="{{item.list}}" wx:key="_id">
           <view class="lf">
-            <view class="circle"></view>
+            <view class="itemIcon {{item.icon}}"></view>
             <view class="text">
               <view class="way">{{item.way}}</view>
-              <view class="where">{{item.where}}</view>
+              <view class="where smallWord">{{item.where}}</view>
             </view>
           </view>
-          <view class="rg">{{item.money}}</view>
+    
+          <view class="rg {{item.isIncome && 'red'}}">{{item.isIncome ? '+' : '-'}}{{item.money}}</view> 
         </view>
       </view>
     </view>
+    </view>
+    </scroll-view>
+    
+    
   </view>
+  <van-toast id="van-toast" />
 </view>
