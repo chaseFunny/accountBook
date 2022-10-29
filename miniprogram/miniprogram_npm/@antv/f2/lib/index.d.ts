@@ -1,0 +1,14 @@
+export const __esModule: boolean;
+export const Canvas: any;
+export const Chart: any;
+export const Children: any;
+export const Component: any;
+export const Fragment: (props: any) => any;
+export const Timeline: any;
+export const createElement: typeof _jsx.jsx;
+export const createRef: any;
+export const jsx: typeof _jsx.jsx;
+export const render: (element: import(".").JSX.Element, container: any, animate?: boolean) => any;
+export const renderShape: typeof _diff.renderShape;
+import _jsx = require("./jsx");
+import _diff = require("./base/diff");

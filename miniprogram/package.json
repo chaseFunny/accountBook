@@ -9,7 +9,8 @@
   "author": "release500",
   "license": "ISC",
   "dependencies": {
-    "@antv/wx-f2": "^2.1.1",
+    "@antv/f2": "^4.0.36",
+    "@antv/f2-wx": "^4.0.36",
     "@vant/weapp": "^1.10.5",
     "dayjs": "^1.11.6"
   },

@@ -1,4 +1,25 @@
 <!--pages/statistical/index.wxml-->
 <view class="pageMain" style="background: #408ce2;">
-  <f2 class="f2-chart" onInit="{{onInitChart}}" />
+  <view class="dateChoose">
+    <van-tabs active="{{ active }}" bind:change="onChange" class="lf">
+      <van-tab title="{{item.val}}" wx:for="{{dateList}}" wx:key="key" id="{{item.key}}"></van-tab>
+    </van-tabs>
+    <view class="rg" bindtap="showTimePicker">
+      <text>10月第2周</text>
+      <view class="itemIcon">
+        <image
+        src="{{caleIconUrl}}"
+        style="width: 100%; height: 100%;"
+        />
+      </view>
+    </view>
+  </view>
+  <view class="content">
+    <view class="itemList">
+      <view class="item {{currChoose == item.num && 'active' }}" wx:for="{{list1}}" bindtap="switch" id="{{item.num}}" wx:key="name">{{item.name}}</view>
+    </view>
+    <cover-view class="bgWhite">
+      <f2 onRender="{{onRenderChart}}"  />
+    </cover-view>
+  </view>
 </view>

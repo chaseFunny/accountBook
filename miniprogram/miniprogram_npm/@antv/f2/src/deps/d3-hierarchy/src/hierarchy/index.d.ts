@@ -1,0 +1,55 @@
+declare function hierarchy(data: any, children: any): any;
+declare class hierarchy {
+    constructor(data: any, children: any);
+    constructor: typeof Node;
+    count: typeof node_count;
+    each: typeof node_each;
+    eachAfter: typeof node_eachAfter;
+    eachBefore: typeof node_eachBefore;
+    find: typeof node_find;
+    sum: typeof node_sum;
+    sort: typeof node_sort;
+    path: typeof node_path;
+    ancestors: typeof node_ancestors;
+    descendants: typeof node_descendants;
+    leaves: typeof node_leaves;
+    links: typeof node_links;
+    copy: typeof node_copy;
+}
+export default hierarchy;
+export function computeHeight(node: any): void;
+export function Node(data: any): void;
+export class Node {
+    constructor(data: any);
+    data: any;
+    depth: number;
+    height: number;
+    parent: any;
+    constructor: typeof Node;
+    count: typeof node_count;
+    each: typeof node_each;
+    eachAfter: typeof node_eachAfter;
+    eachBefore: typeof node_eachBefore;
+    find: typeof node_find;
+    sum: typeof node_sum;
+    sort: typeof node_sort;
+    path: typeof node_path;
+    ancestors: typeof node_ancestors;
+    descendants: typeof node_descendants;
+    leaves: typeof node_leaves;
+    links: typeof node_links;
+    copy: typeof node_copy;
+}
+import node_count from "./count.js";
+import node_each from "./each.js";
+import node_eachAfter from "./eachAfter.js";
+import node_eachBefore from "./eachBefore.js";
+import node_find from "./find.js";
+import node_sum from "./sum.js";
+import node_sort from "./sort.js";
+import node_path from "./path.js";
+import node_ancestors from "./ancestors.js";
+import node_descendants from "./descendants.js";
+import node_leaves from "./leaves.js";
+import node_links from "./links.js";
+declare function node_copy(): any;

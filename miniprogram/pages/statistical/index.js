@@ -1,39 +1,107 @@
-
+import { createElement } from '@antv/f2';
+import Chart from './chart';
+import dayjs from 'dayjs'
+const db =wx.cloud.database()
+const _ = db.command
+import {getCludeFunc} from '../../utils/index'
+const data1 = [{
+  genre: 'Sports',
+  sold: 275
+}, {
+  genre: 'Strategy',
+  sold: 115
+}, {
+  genre: 'Action',
+  sold: 120
+}, {
+  genre: 'Shooter',
+  sold: 350
+}, {
+  genre: 'Other',
+  sold: 150
+}];
+  // "@antv/wx-f2": "^2.1.1",
 Component({
   data: {
-    onInitChart(F2, config) {
-      const chart = new F2.Chart(config);
-      const data = [
-        { value: 63.4, city: 'New York', date: '2011-10-01' },
-        { value: 62.7, city: 'Alaska', date: '2011-10-01' },
-        { value: 72.2, city: 'Austin', date: '2011-10-01' },
-        { value: 58, city: 'New York', date: '2011-10-02' },
-        { value: 59.9, city: 'Alaska', date: '2011-10-02' },
-        { value: 67.7, city: 'Austin', date: '2011-10-02' },
-        { value: 53.3, city: 'New York', date: '2011-10-03' },
-        { value: 59.1, city: 'Alaska', date: '2011-10-03' },
-        { value: 69.4, city: 'Austin', date: '2011-10-03' },
-      ];
-      chart.source(data, {
-        date: {
-          range: [0, 1],
-          type: 'timeCat',
-          mask: 'MM-DD'
-        },
-        value: {
-          max: 300,
-          tickCount: 4
-        }
+    chartData: data1,
+    onRenderChart: () => {},
+    caleIconUrl: '../../images/iconPng/calendar.png',
+    currChoose: '0',
+    dateList: [
+      {key: 0, val: '按日'},
+      {key: 1, val: '按周'},
+      {key: 2, val: '按月'},
+    ],
+    list1: [
+      {name: '收支', num: 0},
+      {name: '收入', num: 1},
+      {name: '支出', num: 2},
+    ],
+    currDateType: '0'
+  },
+  ready() {
+    this.setData({
+      onRenderChart: () => {
+        return this.renderChart(data1);
+      }
+    }); // 模拟数据更新
+    // setTimeout(() => {
+    //   this.setData({
+    //     onRenderChart: () => {
+    //       return this.renderChart(data2);
+    //     }
+    //   });
+    // }, 2000);
+  },
+  methods: {
+    renderChart(data) {
+      // return _jsx(Chart, {
+      //   data: data
+      // }); // 如果不使用 jsx, 用下面代码效果也是一样的
+      return createElement(Chart, {
+        data: data,
       });
-      chart.area().position('date*value').color('city').adjust('stack');
-      chart.line().position('date*value').color('city').adjust('stack');
-      chart.render();
-      // 注意：需要把chart return 出来
-      return chart;
-    }
+    },
+    onChange(e){
+      console.log(e, 'tab');
+      this.setData({
+        currDateType: e.detail.index
+      })
+    },
+    switch(e){
+      console.log(e, 'switch');
+      this.setData({
+        currChoose: e.currentTarget.id
+      })
+    },
+    showTimePicker(){
+      wx.navigateTo({
+        url: '../chooseTime/index?id='+this.data.currDateType,
+      })
+    },
+    timeRange(){
+
+    },
   },
   pageLifetimes: {
     show() {
+      console.log(dayjs().endOf('date').format(),dayjs().startOf('date').format(), 'timeEnd');
+      const {currDateType, currChoose} = this.data
+
+      const id = wx.getStorageSync('openid');
+      const queryObj = currChoose ? {
+        userID: id,
+        isIncome: currChoose == 1 ? true : false,
+        recordTime: _.and(_.lt(dayjs().startOf()),_.lt(dayjs().endOf())) 
+      } : {
+        userID: id,
+        recordTime: _.lt(dayjs().endOf())
+      }
+      // 调用云函数，拿到数据
+      getCludeFunc('commonGain', {
+        name: 'inOutModel',
+        queryObj
+      })
       if (typeof this.getTabBar === 'function' &&
         this.getTabBar()) {
         this.getTabBar().setData({

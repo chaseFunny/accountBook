@@ -1,0 +1,11 @@
+export const __esModule: boolean;
+export const withGuide: any;
+export default _default;
+export var TextGuide: any;
+export var PointGuide: any;
+export var LineGuide: any;
+export var ArcGuide: any;
+export var RectGuide: any;
+export var ImageGuide: any;
+export var TagGuide: any;
+declare var _default: any;

@@ -1,5 +1,7 @@
 {
   "usingComponents": {
-    "f2": "@antv/wx-f2"
+    "f2": "@antv/f2-wx",
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index"
   }
 }

@@ -1,0 +1,9 @@
+<view class=""> 
+  <van-calendar
+    min-date="1656060049445"
+    title="选择时间"
+    poppable="{{ false }}"
+    show-confirm="{{ false }}"
+    class="calendar"
+  />
+</view>

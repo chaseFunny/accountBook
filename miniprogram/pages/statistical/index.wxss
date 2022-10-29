@@ -1,4 +1,84 @@
-.f2-chart {
-  width: 100%;
-  height: 500rpx;
+.dateChoose {
+  height: 120rpx;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px;
+}
+.dateChoose .lf {
+  width: 40%;
+}
+.dateChoose .rg {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0 6px 0 8px;
+  border-radius: 5px;
+}
+.dateChoose .rg text {
+  width: 95px;
+  font-size: 14px;
+  letter-spacing: 4rpx;
+  margin-left: 5rpx;
+  color: #f3efef;
+  font-weight: 550;
+  margin-right: 4px;
+}
+.dateChoose .rg .itemIcon {
+  width: 26px;
+  height: 26px;
+  background-repeat: no-repeat;
+  padding: 3rpx 0 3rpx 0;
+  margin-right: 4px;
+}
+.dateChoose .van-tabs__scroll {
+  background-color: transparent;
+}
+.dateChoose .van-tabs__line {
+  background-color: #fff;
+}
+.dateChoose .van-tab--active {
+  color: #fff !important;
+}
+.dateChoose .van-tab {
+  letter-spacing: 2px;
+  color: rgba(233, 229, 229, 0.918);
+}
+.content {
+  width: 90%;
+  height: 75vh;
+  margin: 16px auto;
+  background: #fff;
+  border-radius: 8px;
+}
+.content .itemList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 26px;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+.content .itemList .item {
+  flex: 1;
+  text-align: center;
+  border: 1px solid #408ce2;
+  color: #408ce2;
+}
+.content .itemList .item:nth-child(2) {
+  border-left: 0;
+  border-right: 0;
+}
+.content .itemList .active {
+  background: #408ce2;
+  color: #fff;
+}
+.content .bgWhite {
+  background: #fff;
+  width: 80vw;
+  height: 400rpx;
+  margin: 16px;
+  border-radius: 10rpx;
 }
