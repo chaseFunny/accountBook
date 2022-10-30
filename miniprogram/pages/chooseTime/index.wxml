@@ -1,9 +1,36 @@
-<view class=""> 
+<view class="pageMain"> 
+<!-- 日选择器 -->
   <van-calendar
     min-date="1656060049445"
     title="选择时间"
     poppable="{{ false }}"
     show-confirm="{{ false }}"
     class="calendar"
+    type="{{calendarType[currType]}}"
+    max-range="7"
+    allow-same-day
+    show-subtitle="{{false}}"
+    bind:confirm="datePicker"
+    default-date="{{defaultsTime}}"
+    wx:if="{{currType == 0}}"
+  />
+  <!-- 周选择器 -->
+  <van-picker
+    show-toolbar
+    columns="{{columns}}"
+    bind:cancel="cancel"
+    bind:confirm="onConfirm"
+    bind:change="onChange"
+    wx:if="{{currType == 1}}"
+  />
+  <!-- 月选择器 -->
+  <van-datetime-picker
+    title="选择时间"
+    type="year-month"
+    value="{{ currentDate }}"
+    min-date="{{ minDate }}"
+    bind:input="onInput"
+    wx:if="{{currType == 2}}"
+    formatter="{{ formatter }}"
   />
 </view>

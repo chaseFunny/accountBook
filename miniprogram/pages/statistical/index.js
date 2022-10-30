@@ -37,9 +37,11 @@ Component({
       {name: '收入', num: 1},
       {name: '支出', num: 2},
     ],
-    currDateType: '0'
+    currDateType: '0', // 选择时间类型
+    currDate: '', // 选择时间值
   },
-  ready() {
+  ready(options) {
+    console.log(options, '统计页面');
     this.setData({
       onRenderChart: () => {
         return this.renderChart(data1);
@@ -76,7 +78,7 @@ Component({
     },
     showTimePicker(){
       wx.navigateTo({
-        url: '../chooseTime/index?id='+this.data.currDateType,
+        url: `../chooseTime/index?id=${this.data.currDateType}-${this.data.currDate}`,
       })
     },
     timeRange(){

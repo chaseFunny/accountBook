@@ -1,6 +1,8 @@
 
 const db = wx.cloud.database()
+var app = getApp();
 const listCol = db.collection('inOutModel')
+const {getCludeFunc : gcf} = require('../../utils/index')
 import Toast from '@vant/weapp/toast/toast';
 import dayjs from 'dayjs'
 import { weekMap, formatNum, defaultIncomeWay } from '../../utils/format';
@@ -141,8 +143,59 @@ Component({
   },
   pageLifetimes: {
     show() {
+      let that = this;
       this.data.isNew = true;
+      // 用户第一次来
+      let id = wx.getStorageSync('openid');
+      // 获取用户信息
+      if(!id){
+        gcf('getUserID', {}).then(res=>{
+          const {openid, appid, } = res.result
+          app.globalData.openID = openid
+          app.globalData.appID = appid
+          wx.setStorageSync('openid', openid)
+          console.log('哈哈',wx.getStorageSync('openid'), res);
+          id = openid
+        })
+      }
+      console.log(id,wx.getStorageSync('openid'), 'ididid');
+      // 查看用户信息是否创建，没有的话，新建
+      wx.cloud.callFunction({
+        name: 'commonGain', 
+        data: {
+           name: 'userInfo',
+           queryObj: {
+             openID: id,
+           }
+         }
+       }).then((result)=>{
+        console.log(result, 'result')
+        if(result.result.data.length <= 0){
+          gcf('commonAdd', {
+            name: 'userInfo',
+            queryObj: {
+              openID: id,
+              allNum: 0,
+              payAll: 0,
+              selfGianWay: [],
+              selfGainFrom: [],
+              selfPayWay: [],
+              isRemand: false,
+              _createTime: Date.parse(new Date()),
+            }
+          })
+        }else{
+          const {allNum, payAll, selfGainFrom, selfGianWay, selfPayWay, isRemand} = result.result.data[0]
+          app.globalData.allNum = allNum;
+          app.globalData.payAll = payAll;
+          app.globalData.selfGainFrom = selfGainFrom;
+          app.globalData.selfGianWay = selfGianWay;
+          app.globalData.selfPayWay = selfPayWay;
+          app.globalData.isRemand = isRemand;
+        }
+      })
       // 获取数据
+      // setTimeout(()=>, 20)
       this.getDate()
       if (typeof this.getTabBar === 'function' &&
         this.getTabBar()) {

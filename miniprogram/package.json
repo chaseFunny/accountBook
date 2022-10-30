@@ -12,7 +12,8 @@
     "@antv/f2": "^4.0.36",
     "@antv/f2-wx": "^4.0.36",
     "@vant/weapp": "^1.10.5",
-    "dayjs": "^1.11.6"
+    "dayjs": "^1.11.6",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "miniprogram-api-typings": "^3.6.0"
