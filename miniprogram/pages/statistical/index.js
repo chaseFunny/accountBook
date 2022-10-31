@@ -3,6 +3,7 @@ import Chart from './chart';
 import dayjs from 'dayjs'
 const db =wx.cloud.database()
 const _ = db.command
+var app = getApp();
 import {getCludeFunc} from '../../utils/index'
 const data1 = [{
   genre: 'Sports',
@@ -40,8 +41,7 @@ Component({
     currDateType: '0', // 选择时间类型
     currDate: '', // 选择时间值
   },
-  ready(options) {
-    console.log(options, '统计页面');
+  ready() {
     this.setData({
       onRenderChart: () => {
         return this.renderChart(data1);
@@ -87,10 +87,12 @@ Component({
   },
   pageLifetimes: {
     show() {
-      console.log(dayjs().endOf('date').format(),dayjs().startOf('date').format(), 'timeEnd');
       const {currDateType, currChoose} = this.data
-
       const id = wx.getStorageSync('openid');
+      console.log(app.globalData, 'tongji');
+      this.setData({
+        currDate: dayjs(app.globalData.chooseTimeGlobal).format('MM月DD日')
+      })
       const queryObj = currChoose ? {
         userID: id,
         isIncome: currChoose == 1 ? true : false,

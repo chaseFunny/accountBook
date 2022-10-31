@@ -2,7 +2,7 @@
   "name": "miniprogram",
   "version": "1.0.0",
   "description": "to help us manage Balance of payments",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

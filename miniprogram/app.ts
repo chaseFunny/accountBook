@@ -11,7 +11,7 @@ App({
     selfPayWay: '', // 自定义支出用途
     isRemand: '', //是否设置提醒
     createTime: '', // 用户创建时间
-    chooseTimeGlobal: '', // 用户选择的时间，因为switchTab不能传参
+    chooseTimeGlobal: new Date(), // 用户选择的时间，因为switchTab不能传参
   },
   onLaunch: function (options) {
     if (!wx.cloud) {
@@ -29,5 +29,51 @@ App({
     } else {
       that.globalData.isShare = false;
     };
+    // 获取openId
+    gcf('getUserID', {}).then(res=>{
+      const {openid, appid} = res.result
+      that.globalData.openID = openid
+      that.globalData.appID = appid
+      console.log(res, 'rsd');
+      wx.setStorageSync('openid', openid)
+      // 查看用户信息是否创建，没有的话，新建
+      wx.cloud.callFunction({
+      name: 'commonGain', 
+      data: {
+          name: 'userInfo',
+          queryObj: {
+            openID: openid,
+          }
+        }
+      }).then((result: any)=>{
+        console.log(result, 'result')
+        if(result.result.data.length <= 0){
+          gcf('commonAdd', {
+            name: 'userInfo',
+            queryObj: {
+              openID: openid,
+              allNum: 0,
+              payAll: 0,
+              selfGianWay: [],
+              selfGainFrom: [],
+              selfPayWay: [],
+              isRemand: false,
+              _createTime: Date.parse(new Date() as any),
+            }
+          })
+        }else{
+          const {allNum, payAll, selfGainFrom, selfGianWay, selfPayWay, isRemand, _createTime,chooseTimeGlobal} = result.result.data[0]
+          that.globalData.allNum = allNum;
+          that.globalData.payAll = payAll;
+          that.globalData.selfGainFrom = selfGainFrom;
+          that.globalData.selfGianWay = selfGianWay;
+          that.globalData.selfPayWay = selfPayWay;
+          that.globalData.isRemand = isRemand;
+          that.globalData.createTime = _createTime;
+          that.globalData.chooseTimeGlobal = chooseTimeGlobal;
+        }
+      })
+
+    })
   }
 });

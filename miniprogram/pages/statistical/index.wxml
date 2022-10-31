@@ -5,7 +5,7 @@
       <van-tab title="{{item.val}}" wx:for="{{dateList}}" wx:key="key" id="{{item.key}}"></van-tab>
     </van-tabs>
     <view class="rg" bindtap="showTimePicker">
-      <text>10月第2周</text>
+      <text>{{currDate}}</text>
       <view class="itemIcon">
         <image
         src="{{caleIconUrl}}"

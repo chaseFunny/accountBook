@@ -2,7 +2,7 @@
 <!-- 日选择器 -->
   <van-calendar
     min-date="1656060049445"
-    title="选择时间"
+    title="选择时间（日）"
     poppable="{{ false }}"
     show-confirm="{{ false }}"
     class="calendar"
@@ -17,6 +17,7 @@
   <!-- 周选择器 -->
   <van-picker
     show-toolbar
+    title="选择时间（周）"
     columns="{{columns}}"
     bind:cancel="cancel"
     bind:confirm="onConfirm"
@@ -25,7 +26,7 @@
   />
   <!-- 月选择器 -->
   <van-datetime-picker
-    title="选择时间"
+    title="选择时间（月）"
     type="year-month"
     value="{{ currentDate }}"
     min-date="{{ minDate }}"

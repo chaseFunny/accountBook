@@ -1,4 +1,5 @@
 import moment from "moment";
+var app = getApp();
 // import "moment/locale/zh-cn";
 // pages/chooseTime/index.ts
 Page({
@@ -52,6 +53,7 @@ Page({
     wx.switchTab({
       url: `../statistical/index`,
     })
+    app.globalData.chooseTimeGlobal = e.detail
   },
   // 月选择器
   onInput(event) {
@@ -103,8 +105,8 @@ setDate() {
   let year = moment().format("YYYY");
   temporaryArr[0].values = [];
   // 塞入年
-  for (let i = year - 1; i < year - 0 + 10; i++) {
-    temporaryArr[0].values.push(i);
+  for (let i = year - 1; i < year - 0 + 2; i++) {
+    temporaryArr[0].values.push(`${i}年`);
   }
   // 选择当前年
   for (let i = 0; i < temporaryArr[0].values.length; i++) {
