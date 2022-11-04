@@ -7,7 +7,7 @@
   padding: 0 16px;
 }
 .dateChoose .lf {
-  width: 40%;
+  width: 51%;
 }
 .dateChoose .rg {
   display: flex;
@@ -19,7 +19,7 @@
 .dateChoose .rg text {
   width: 95px;
   font-size: 14px;
-  letter-spacing: 4rpx;
+  letter-spacing: 3rpx;
   margin-left: 5rpx;
   color: #f3efef;
   font-weight: 550;

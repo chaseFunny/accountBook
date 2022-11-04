@@ -145,7 +145,7 @@ Page({
         userID: app.globalData.openID,
         isIncome: this.data.isIncome,
         money: moneyNumber,
-        recordTime: date,
+        recordTime: dayjs(date).valueOf(),
         way: way,
         where: how,
         note

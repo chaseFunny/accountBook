@@ -3,6 +3,7 @@ import Chart from './chart';
 import dayjs from 'dayjs'
 const db =wx.cloud.database()
 const _ = db.command
+const $ = db.command.aggregate
 var app = getApp();
 import {getCludeFunc} from '../../utils/index'
 const data1 = [{
@@ -30,8 +31,9 @@ Component({
     currChoose: '0',
     dateList: [
       {key: 0, val: '按日'},
-      {key: 1, val: '按周'},
+      // {key: 1, val: '按周'},
       {key: 2, val: '按月'},
+      {key: 3, val: '时段'}
     ],
     list1: [
       {name: '收支', num: 0},
@@ -64,11 +66,23 @@ Component({
         data: data,
       });
     },
+    // 时间类型切换
     onChange(e){
+      const {chooseTimeGlobal} = app.globalData
       console.log(e, 'tab');
       this.setData({
         currDateType: e.detail.index
       })
+      if( e.detail.index == 0){
+        this.setData({
+          currDate: dayjs(chooseTimeGlobal.value).format('MM月DD日')
+        })
+      }
+      if( e.detail.index == 1){
+        this.setData({
+          currDate: dayjs(chooseTimeGlobal.value).format('YYYY年MM月')
+        })
+      }
     },
     switch(e){
       console.log(e, 'switch');
@@ -78,21 +92,54 @@ Component({
     },
     showTimePicker(){
       wx.navigateTo({
-        url: `../chooseTime/index?id=${this.data.currDateType}-${this.data.currDate}`,
+        url: `../chooseTime/index?id=${this.data.currDateType}#${JSON.stringify(app.globalData.chooseTimeGlobal)}`,
       })
     },
-    timeRange(){
-
+    queryData(type, time){
+      let timeRange = []
+      if(type == 0){
+        timeRange[0] = 1
+      }
     },
   },
   pageLifetimes: {
     show() {
       const {currDateType, currChoose} = this.data
+      const {chooseTimeGlobal} = app.globalData
       const id = wx.getStorageSync('openid');
       console.log(app.globalData, 'tongji');
-      this.setData({
-        currDate: dayjs(app.globalData.chooseTimeGlobal).format('MM月DD日')
-      })
+      const that = this
+      if(chooseTimeGlobal.type == 0){
+        this.setData({
+          currDate: dayjs(chooseTimeGlobal.value).format('MM月DD日')
+        })
+        wx.cloud.callFunction({
+          name:'getDataByTime',
+          data:{
+            name:'inOutModel',
+            queryObj:{
+              userID: wx.getStorageSync('openid'),
+              beginTime: dayjs(chooseTimeGlobal.value).startOf('date').valueOf(),
+              endTime: dayjs(chooseTimeGlobal.value).endOf('date').valueOf()
+            }
+          },
+          success: function(res){
+            console.log(res, '运输局');
+          }
+        })
+      }
+      if(chooseTimeGlobal.type == 1){
+        const index = chooseTimeGlobal.value[1].text.findIndex('(')
+        this.setData({
+          currDate: chooseTimeGlobal.value[1].text.subString(0, index)
+        })
+      }
+      if(chooseTimeGlobal.type == 2){
+        console.log(chooseTimeGlobal, 'chooseTimeGlobal');
+        this.setData({
+          currDate: dayjs(chooseTimeGlobal.value).format('YYYY年MM月')
+        })
+      }
       const queryObj = currChoose ? {
         userID: id,
         isIncome: currChoose == 1 ? true : false,

@@ -70,7 +70,10 @@ App({
           that.globalData.selfPayWay = selfPayWay;
           that.globalData.isRemand = isRemand;
           that.globalData.createTime = _createTime;
-          that.globalData.chooseTimeGlobal = chooseTimeGlobal;
+          that.globalData.chooseTimeGlobal =  chooseTimeGlobal || {
+            type: 0,
+            value: new Date()
+          };
         }
       })
 

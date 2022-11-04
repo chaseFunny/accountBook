@@ -11,14 +11,17 @@ Page({
     calendarType: ['single','multiple', 'range'],
     currType: '', // 父组件接受到的当前选择类型
     currentDate: new Date().getTime(),
-    minDate: new Date().getTime(),
+    minDate: app.globalData.createTime,
+    maxDate: new Date().getTime(),
     columns: [
       {
         values: [],
         className: "column1"
+        // defaultIndex: '1'
       },
       {
         values: [],
+        // defaultIndex: '22'
         className: "column2"
       }
     ], // 周选择器
@@ -38,13 +41,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.setDate();
-    const arr = options.id.split('-')
-    console.log(arr, 'hh');
+    console.log(options,app.globalData, 'options')
+    const arr = options.id.split('#')
+    console.log(arr, moment(JSON.parse(arr[1]).value).valueOf(), 'hh');
     this.setData({
       currType: arr[0],
-      defaultsTime: arr[1]
+      defaultsTime: JSON.parse(arr[1]).value
     })
+    if(arr[0] == '1'){
+      this.setDate(JSON.parse(arr[1]).value);
+    }
+    if(arr[0] == '2'){
+      this.setData({
+        currentDate: moment(JSON.parse(arr[1]).value).valueOf()
+      })
+    }
   },
 
   // 日选择器
@@ -53,23 +64,33 @@ Page({
     wx.switchTab({
       url: `../statistical/index`,
     })
-    app.globalData.chooseTimeGlobal = e.detail
+    app.globalData.chooseTimeGlobal = Object.assign({type:0, value: e.detail})
   },
   // 月选择器
   onInput(event) {
     console.log(event, 'event');
-    this.setData({
-      currentDate: event.detail,
-    });
+    app.globalData.chooseTimeGlobal = Object.assign({type:2, value: event.detail})
+    wx.switchTab({
+      url: `../statistical/index`,
+    })
+    // this.setData({
+    //   currentDate: event.detail,
+    // });
+  },
+  mounthCancel(e){
+    wx.switchTab({
+      url: `../statistical/index`,
+    })
   },
   // 周选择 获取一年的周次列表 y: 当前
 weelys (y)  {
+  // 获取年份的第一天
   const oneDay = moment(y + "-01-01");
+  // 一周
   let oneWeely = null;
   if (oneDay.format("wo") == "1周") {
     oneWeely = oneDay.startOf("week").format("YYYY-MM-DD");
   } else {
-    console.log("weeks");
     oneDay.add(1, "weeks");
     oneWeely = oneDay.startOf("week").format("YYYY-MM-DD");
   }
@@ -97,27 +118,28 @@ weelys (y)  {
   })
   return arr;
 },
-setDate() {
-  const defaultData = moment(this.data.defaultsTime);
+setDate(date) {
+  const defaultData = moment(date);
   const {columns} = this.data
   const temporaryArr = [].concat(columns)
   // 获取默认年份
-  let year = moment().format("YYYY");
+  let year = defaultData.format("YYYY");
   temporaryArr[0].values = [];
   // 塞入年
-  for (let i = year - 1; i < year - 0 + 2; i++) {
+  for (let i = year - 1; i < year - 0 + 1; i++) {
     temporaryArr[0].values.push(`${i}年`);
   }
   // 选择当前年
   for (let i = 0; i < temporaryArr[0].values.length; i++) {
-    if (temporaryArr[0].values[i] == year) {
+    if (parseInt(temporaryArr[0].values[i]) == parseInt(year)) {
       temporaryArr[0].defaultIndex = i;
-      temporaryArr[0].valueKey = i;
+      temporaryArr[0].valueKey = i; 
       break;
     }
   }
-
+  // 筛入周
   temporaryArr[1].values = this.weelys(year);
+  // 查当前周
   for (let i = 0; i < temporaryArr[1].values.length; i++) {
     if (
       moment(temporaryArr[1].values[i].value).format("wo") ==
@@ -128,19 +150,26 @@ setDate() {
       break;
     }
   }
+  console.log(temporaryArr,defaultData,date, 'temporaryArr');
   this.setData({
     columns: temporaryArr
   })
-  console.log(temporaryArr, 'temporaryArr');
 },
 onConfirm(e) {
   console.log(e, '周confirm');
+  app.globalData.chooseTimeGlobal = Object.assign({type:2}, e.detail)
+  wx.switchTab({
+    url: `../statistical/index`,
+  })
 },
 onChange(e) {
   console.log(e, '周onChange');
 },
 cancel(e) {
   console.log(e, '周cancel');
+  wx.switchTab({
+    url: `../statistical/index`,
+  })
 },
   /**
    * 生命周期函数--监听页面初次渲染完成

@@ -7,8 +7,6 @@
     show-confirm="{{ false }}"
     class="calendar"
     type="{{calendarType[currType]}}"
-    max-range="7"
-    allow-same-day
     show-subtitle="{{false}}"
     bind:confirm="datePicker"
     default-date="{{defaultsTime}}"
@@ -19,9 +17,9 @@
     show-toolbar
     title="选择时间（周）"
     columns="{{columns}}"
+    default-index="{{defaultIndex}}"
     bind:cancel="cancel"
     bind:confirm="onConfirm"
-    bind:change="onChange"
     wx:if="{{currType == 1}}"
   />
   <!-- 月选择器 -->
@@ -30,7 +28,9 @@
     type="year-month"
     value="{{ currentDate }}"
     min-date="{{ minDate }}"
-    bind:input="onInput"
+    max-date="{{maxDate}}"
+    bind:confirm="onInput"
+    bind:cancel="mounthCancel"
     wx:if="{{currType == 2}}"
     formatter="{{ formatter }}"
   />
