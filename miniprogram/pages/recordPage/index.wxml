@@ -30,7 +30,7 @@
     <van-popup show="{{ show }}"  position="bottom"  round bind:click-overlay="onClose" custom-style="height: 50%">
       <van-datetime-picker
         type="date"
-        value="{{ currentDate }}"
+        value="{{ model.date }}"
         min-date="{{ minDate }}"
         formatter="{{ formatter }}"
         title="{{isIncome ? '收入' : '支出'}}日期"

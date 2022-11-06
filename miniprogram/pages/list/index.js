@@ -10,11 +10,13 @@ import { weekMap, formatNum, defaultIncomeWay } from '../../utils/format';
 Component({
   data: {
     isNew: false,
+    show: false,
     inOrOut: [
       {key: 'bothAll', value: '收支记录'},
       {key: 'income', value: '收入记录'},
       {key: 'sendOut', value: '支出记录'},
     ],
+    currRecordType: '收支记录',
     chooseTime: '',
     dataList: [], // 数据列表
     isRemind: '', // 是否设置记账提醒
@@ -42,8 +44,9 @@ Component({
     /** 下拉在加载 */
     async bindLoadingNew(e){
       await this.setData({
-        offset: 0
-      })
+        offset: 0,
+        currRecordType: '收支记录'
+      }) 
       await this.getDate()
       await this.setData({
         isMoveToUp: false
@@ -116,7 +119,7 @@ Component({
       const that = this
       const searchObj = {userID: wx.getStorageSync('openid')}
       listCol.where(searchObj).skip(offset).limit(size).get().then(res=>{
-        console.log('调用接口了');
+        console.log(res,'调用接口了');
         const {isNew} = this.data
         if(res.data.length > 0) {
           // 当数据不足20条，下拉就提醒到底了
@@ -140,6 +143,59 @@ Component({
           Toast.fail('数据为空');
         }
       })
+    },
+    /** 弹出开启 关闭 */
+    popupControl(e) {
+      console.log(e, '展示');
+      if(e.type == 'close'){
+        this.setData({
+          show: !this.data.show
+        })
+      }
+    },
+    /** 展示收支选择弹窗 */
+    showPopup() {
+      this.setData({
+        show: !this.data.show
+      })
+    },
+    /** 记录类型改变 */
+    recordChange(e){
+      console.log(e, 'changge');
+      this.setData({
+        currRecordType: e.currentTarget.id,
+        show: !this.data.show
+      })
+      // 请求数据
+      let arrIncome = [];
+      let arrOut = [];
+      this.data.dataList.forEach((item)=>{
+        if(item.isIncome) {
+          arrIncome.push(item)
+        }
+      })
+      this.data.dataList.forEach((item)=>{
+        if(!item.isIncome) {
+          arrOut.push(item)
+        }
+      })
+      if(this.data.currRecordType == '收支记录'){
+        this.formatData(this.data.dataList)
+      }
+      if(this.data.currRecordType == '收入记录'){
+        this.formatData(arrIncome)
+      }
+      if(this.data.currRecordType == '支出记录'){
+        this.formatData(arrOut)
+      }
+    },
+    /** 闹钟 */
+    setClock() {
+      Toast('还在开发中~');
+    },
+    /** 选择时间 */
+    selectTime(){
+
     }
   },
   pageLifetimes: {

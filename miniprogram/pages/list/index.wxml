@@ -1,14 +1,39 @@
 <!--pages/list/index.wxml-->
 <view class="pageMain" style="background: #408ce2;">
+  <van-popup
+    show="{{ show }}"
+    bind:close="popupControl"
+    position="bottom"
+    round
+    closeable
+    lock-scroll
+    safe-area-inset-top
+    safe-area-inset-bottom
+    close-on-click-overlay
+    custom-style="height: 40%;"
+  >
+    <view class="recordType">
+      <view class="autoBox">
+        <view
+          class="item {{currRecordType == item.value && 'curr'}}"
+          wx:for="{{inOrOut}}"
+          wx:key="key"
+          bindtap="recordChange"
+          id="{{item.value}}"
+        >{{item.value}}
+        </view>
+      </view>
+    </view>
+  </van-popup>
   <view class="box">
     <view class="nav">
-      <view class="lf">
-        <text>收支记录 </text> 
+      <view class="lf" bindtap="showPopup">
+        <text>{{currRecordType}} </text> 
         <van-icon name="arrow-down" />
       </view>
       <view class="rg">
-        <van-icon name="underway-o" class="iconf" />
-        <van-icon name="calendar-o" class="iconf" />
+        <van-icon name="underway-o" class="iconf" bindtap="setClock" />
+        <van-icon name="calendar-o" class="iconf" bindtap="selectTime" />
       </view>
     </view>
     <scroll-view scroll-y="true" class="infinite" bindscrolltolower="lower"

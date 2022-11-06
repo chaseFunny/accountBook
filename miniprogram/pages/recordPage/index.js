@@ -16,7 +16,7 @@ Page({
     model:{
       _createTime: '',
       moneyNumber: '', // 金额
-      date: '', // 日期
+      date: new Date().getTime(), // 日期
       way: '', // 渠道
       how: '', // 收入来源，支出用途
       note: '', // 备注
@@ -26,13 +26,16 @@ Page({
     show: false, // 是否展示日期选择器
     isShow: false, // 渠道，用途，弹出层
     currIndex: '',
-    minDate: new Date().getTime(),
+    minDate: dayjs().subtract(7, 'day').valueOf(),
     formatter(type, value) {
       if (type === 'year') {
         return `${value}年`;
       }
       if (type === 'month') {
         return `${value}月`;
+      }
+      if (type === 'day') {
+        return `${value}日`;
       }
       return value;
     },
@@ -55,9 +58,6 @@ Page({
     console.log(app.globalData,dayjs(new Date()), 'options');
     this.setData({
       isIncome: Boolean(Number(options.id)),
-      model: {
-        date: new Date()
-      },
       currentDate: this.formatDate(new Date().getTime())
     })
   },
@@ -102,11 +102,12 @@ Page({
   onInput(event) {
     const date = this.formatDate(event.detail)
     this.setData({
-      [`model.date`]: new Date(event.detail),
+      [`model.date`]: new Date(event.detail).getTime(),
       currentDate: date
     });
   },
   chooseTime(e){
+    console.log(e,'eee');
     if(e.type === 'confirm'){
      this.onInput(e)
     }
