@@ -34,6 +34,7 @@
       <view class="rg">
         <van-icon name="underway-o" class="iconf" bindtap="setClock" />
         <van-icon name="calendar-o" class="iconf" bindtap="selectTime" />
+        
       </view>
     </view>
     <scroll-view scroll-y="true" class="infinite" bindscrolltolower="lower"
@@ -41,8 +42,9 @@
     bindrefresherrefresh ="bindLoadingNew"
     refresher-triggered ="{{isMoveToUp}}" 
     bounces>
+    <view>
       <view wx:for="{{loadList}}"  wx:key="index">
-      <view wx:if="{{item != null}}" class="inOut">
+      <view wx:if="{{item != null || index == 0}}" class="inOut">
       <view class="header">
         <view class="date">
           <text class="day">{{item.date[0]}}</text>
@@ -55,6 +57,11 @@
         </view>
       </view>
       <van-divider />
+      <view class="todayNoData" wx:if="{{index == 0 && item == null}}">
+        <image src="{{nodata}}" mode="aspectFill"  />
+        <view class="text">今日还没有记录 赶快记下今日的收支状况吧!</view>
+        <van-button plain type="info" class="btn" round bind:click="goAdd">去记一笔</van-button>
+      </view>
       <view class="dataList">
         <view class="item" wx:for="{{item.list}}" wx:key="_id">
           <view class="lf">
@@ -69,10 +76,27 @@
         </view>
       </view>
     </view>
+      </view>
+      <view class="nodata" wx:if="{{loadList.length == 0}}">
+        <image src="{{nodata}}" mode="aspectFill"  />
+        <van-button plain type="info" class="btn" round bind:click="goAdd">去记一笔</van-button>
+      </view>
     </view>
+     
     </scroll-view>
-    
-    
   </view>
+  <van-calendar
+    title="选择时间范围"
+    show="{{ showCalendar }}"
+    type="range"
+    min-date="{{minDate}}"
+    max-date="{{maxDate}}"
+    default-date="{{currDate}}"
+    bind:close="onClose"
+    bind:select="onConfirm"
+    show-mark="{{false}}"
+    show-subtitle="{{false}}"
+    color="#408ce2"
+  />
   <van-toast id="van-toast" />
 </view>

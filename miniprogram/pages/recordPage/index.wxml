@@ -32,6 +32,7 @@
         type="date"
         value="{{ model.date }}"
         min-date="{{ minDate }}"
+        max-date="{{ maxDate }}"
         formatter="{{ formatter }}"
         title="{{isIncome ? '收入' : '支出'}}日期"
         bind:confirm="chooseTime"

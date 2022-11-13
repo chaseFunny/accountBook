@@ -1,4 +1,4 @@
-import { Chart, Interval, Axis } from '@antv/f2';
+import { Chart, Interval, Axis, Legend  } from '@antv/f2';
 import { jsx as _jsx } from "@antv/f2/jsx-runtime";
 import { jsxs as _jsxs } from "@antv/f2/jsx-runtime";
 export default (props => {
@@ -15,10 +15,13 @@ export default (props => {
      _jsx(Axis, {
       field: "sold"
     }),
+    _jsx(Legend ,{
+      position: "top"
+    }),
     _jsx(Interval, {
       x: "genre",
       y: "sold",
-      color: "genre",
+      color: "name",
       selection: {
         selectedStyle: {
           fillOpacity: 1
@@ -26,6 +29,10 @@ export default (props => {
         unSelectedStyle: {
           fillOpacity: 0.4
         }
+      },
+      adjust: {
+        type: 'dodge',
+        marginRatio: 0.05, // 设置分组间柱子的间距
       }
     })
   ]

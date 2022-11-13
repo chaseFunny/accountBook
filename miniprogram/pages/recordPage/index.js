@@ -26,7 +26,8 @@ Page({
     show: false, // 是否展示日期选择器
     isShow: false, // 渠道，用途，弹出层
     currIndex: '',
-    minDate: dayjs().subtract(7, 'day').valueOf(),
+    minDate: dayjs().subtract(1, 'year').valueOf(),
+    maxDate: dayjs().valueOf(),
     formatter(type, value) {
       if (type === 'year') {
         return `${value}年`;

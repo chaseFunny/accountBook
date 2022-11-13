@@ -1,6 +1,7 @@
 
 const db = wx.cloud.database()
 var app = getApp();
+const _ = db.command
 const listCol = db.collection('inOutModel')
 const {getCludeFunc : gcf} = require('../../utils/index')
 import Toast from '@vant/weapp/toast/toast';
@@ -9,8 +10,13 @@ import { weekMap, formatNum, defaultIncomeWay } from '../../utils/format';
 // @ts-ignore
 Component({
   data: {
+    nodata:'../../images/colorfulPng/noData.jpg',
     isNew: false,
     show: false,
+    showCalendar: false,
+    minDate: dayjs(new Date()).subtract(1, 'year').valueOf(),
+    maxDate: dayjs(new Date()).valueOf(),
+    currDate: new Date().getTime(),
     inOrOut: [
       {key: 'bothAll', value: '收支记录'},
       {key: 'income', value: '收入记录'},
@@ -29,15 +35,37 @@ Component({
     isRequestNext: true,
   },
   methods: {
+    /** 时间范围选择 */
+    onClose() {
+      this.setData({
+        showCalendar: false
+      })
+    },
+    onConfirm(e){
+      if(e.detail[1]){
+        const beginTime = dayjs(e.detail[0]).startOf('date').valueOf()
+        const endTime = dayjs(e.detail[1]).endOf('date').valueOf()
+        this.getDate({
+          recordTime: 
+          _.and(_.gte(beginTime),_.lte(endTime))
+        })
+        this.setData({
+          showCalendar: false
+        })
+      }
+    },
+    goAdd() {
+      wx.navigateTo({
+        url: '../recordPage/index?id=0',
+      })
+    },
     /** 滚动底部 */
     async lower(e){
-      console.log('tolower',this.data.size, this.data.offset,this.data.isRequestNext, e);
       if(this.data.isRequestNext){
         await this.setData({
           offset: this.data.size + this.data.offset
         })
       }else{
-        console.log('jinlaio');
         Toast('已经到底啦~');
       }
     },
@@ -47,7 +75,7 @@ Component({
         offset: 0,
         currRecordType: '收支记录'
       }) 
-      await this.getDate()
+      await this.getDate({})
       await this.setData({
         isMoveToUp: false
       })
@@ -99,8 +127,15 @@ Component({
           resArr[TimeDiffer].list = {0: {...obj, icon: newObj.iconName}}
         }
       })
-      resArr = resArr.map(ele => {
+      let flag =true
+      resArr = resArr.map((ele, index) => {
+        if(index == 0) {
+          flag = false
+        }
         if(ele === null) {
+          if(index == 0) {
+            
+          }
           return null
         } else {
           return Object.assign({},ele,{
@@ -109,19 +144,27 @@ Component({
           })
         }
       })
+      if(flag) {
+        resArr[0] = {
+          date: this.transTime((new Date()).valueOf()),
+          income: 0.00,
+          isRecord: true,
+          list: [],
+          spending:0.00
+        }
+      }
       this.setData({
         loadList: resArr
       })
     },
     /** 调用接口，获取数据 */
-    async getDate() {
+    async getDate(obj) {
       const {offset, size} = this.data
       const that = this
       const searchObj = {userID: wx.getStorageSync('openid')}
-      listCol.where(searchObj).skip(offset).limit(size).get().then(res=>{
-        console.log(res,'调用接口了');
+      listCol.where(Object.assign({},searchObj,obj)).skip(offset).limit(size).get().then(res=>{
         const {isNew} = this.data
-        if(res.data.length > 0) {
+        if(res.data.length >= 0) {
           // 当数据不足20条，下拉就提醒到底了
           if(res.data.length < 20) {
             this.setData({
@@ -146,7 +189,6 @@ Component({
     },
     /** 弹出开启 关闭 */
     popupControl(e) {
-      console.log(e, '展示');
       if(e.type == 'close'){
         this.setData({
           show: !this.data.show
@@ -161,7 +203,6 @@ Component({
     },
     /** 记录类型改变 */
     recordChange(e){
-      console.log(e, 'changge');
       this.setData({
         currRecordType: e.currentTarget.id,
         show: !this.data.show
@@ -191,11 +232,13 @@ Component({
     },
     /** 闹钟 */
     setClock() {
-      Toast('还在开发中~');
+      Toast('开发中~');
     },
     /** 选择时间 */
     selectTime(){
-
+      this.setData({
+        showCalendar: true
+      })
     }
   },
   pageLifetimes: {
@@ -203,7 +246,7 @@ Component({
       this.data.isNew = true;
       // 获取数据
       // setTimeout(()=>, 20)
-      this.getDate()
+      this.getDate({})
       if (typeof this.getTabBar === 'function' &&
         this.getTabBar()) {
         this.getTabBar().setData({

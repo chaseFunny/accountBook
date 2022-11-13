@@ -6,23 +6,15 @@ const _ = db.command
 const $ = db.command.aggregate
 var app = getApp();
 import {getCludeFunc} from '../../utils/index'
-const data1 = [{
-  genre: 'Sports',
-  sold: 275
-}, {
-  genre: 'Strategy',
-  sold: 115
-}, {
-  genre: 'Action',
-  sold: 120
-}, {
-  genre: 'Shooter',
-  sold: 350
-}, {
-  genre: 'Other',
-  sold: 150
-}];
-  // "@antv/wx-f2": "^2.1.1",
+const data1 = [
+  {name: '支出',genre: '今日',sold: 0},
+  {name: '收入',genre: '今日',sold: 0},
+  {name: '支出',genre: '昨日',sold: 0},
+  {name: '收入',genre: '昨日',sold: 0},
+  {name: '支出',genre: `${dayjs().subtract(3, 'day').date()}日`,sold: 0},
+  {name: '收入',genre: `${dayjs().subtract(3, 'day').date()}日`,sold: 0},
+]
+// "@antv/wx-f2": "^2.1.1",
 Component({
   data: {
     chartData: data1,
@@ -101,6 +93,53 @@ Component({
         timeRange[0] = 1
       }
     },
+    /** 获取数据 */
+    getChartData (beginTime, endTime){
+      console.log(dayjs(beginTime).date(), dayjs(endTime).date(), '开始结束');
+      const _this = this
+      return wx.cloud.callFunction({
+        name:'getDataByTime',
+        data:{
+          name:'inOutModel',
+          queryObj:{
+            userID: wx.getStorageSync('openid'),
+            beginTime,
+            endTime
+          }
+        },
+        success: function(res){
+          return _this.transDataByDay(res.result.list,endTime)
+        }
+      })
+    },
+    // 数据转为图表接受的数据格式
+    transDataByDay (arr,time) {
+      const arr1 = [
+        {name: '支出',genre: '今日',sold: 0},
+        {name: '收入',genre: '今日',sold: 0},
+        {name: '支出',genre: '昨日',sold: 0},
+        {name: '收入',genre: '昨日',sold: 0},
+        {name: '支出',genre: `${dayjs(time).subtract(2, 'day').date()}日`,sold: 0},
+        {name: '收入',genre: `${dayjs(time).subtract(2, 'day').date()}日`,sold: 0},
+      ]
+      const todayNum = dayjs(time).date()
+      arr.forEach(ele=>{
+        // 先判断是哪一天，再判断是收入还是支出，得出index
+        const gapNum = todayNum - dayjs(ele.recordTime).date()
+        console.log(todayNum, dayjs(ele.recordTime).date(), '时间');
+        if(ele.isIncome) {
+          arr1[gapNum*2].sold += +ele.money
+        }else{
+          arr1[1+gapNum*2].sold += +ele.money
+        }
+      })
+      this.setData({
+        onRenderChart: () => {
+          return this.renderChart(arr1.reverse());
+        }
+      });
+      return arr1
+    }
   },
   pageLifetimes: {
     show() {
@@ -113,20 +152,10 @@ Component({
         this.setData({
           currDate: dayjs(chooseTimeGlobal.value).format('MM月DD日')
         })
-        wx.cloud.callFunction({
-          name:'getDataByTime',
-          data:{
-            name:'inOutModel',
-            queryObj:{
-              userID: wx.getStorageSync('openid'),
-              beginTime: dayjs(chooseTimeGlobal.value).startOf('date').valueOf(),
-              endTime: dayjs(chooseTimeGlobal.value).endOf('date').valueOf()
-            }
-          },
-          success: function(res){
-            console.log(res, '运输局');
-          }
-        })
+        this.getChartData(
+          dayjs(chooseTimeGlobal.value).subtract(2, 'day').startOf('date').valueOf(),
+          dayjs(chooseTimeGlobal.value).endOf('date').valueOf()
+        )
       }
       if(chooseTimeGlobal.type == 1){
         const index = chooseTimeGlobal.value[1].text.findIndex('(')
@@ -140,19 +169,19 @@ Component({
           currDate: dayjs(chooseTimeGlobal.value).format('YYYY年MM月')
         })
       }
-      const queryObj = currChoose ? {
-        userID: id,
-        isIncome: currChoose == 1 ? true : false,
-        recordTime: _.and(_.lt(dayjs().startOf()),_.lt(dayjs().endOf())) 
-      } : {
-        userID: id,
-        recordTime: _.lt(dayjs().endOf())
-      }
+      // const queryObj = currChoose ? {
+      //   userID: id,
+      //   isIncome: currChoose == 1 ? true : false,
+      //   recordTime: _.and(_.lt(dayjs().startOf().valueOf()),_.lt(dayjs().endOf().valueOf())) 
+      // } : {
+      //   userID: id,
+      //   recordTime: _.lt(dayjs().endOf().valueOf())
+      // }
       // 调用云函数，拿到数据
-      getCludeFunc('commonGain', {
-        name: 'inOutModel',
-        queryObj
-      })
+      // getCludeFunc('commonGain', {
+      //   name: 'inOutModel',
+      //   queryObj
+      // })
       if (typeof this.getTabBar === 'function' &&
         this.getTabBar()) {
         this.getTabBar().setData({
