@@ -41,6 +41,7 @@
     refresher-enabled
     bindrefresherrefresh ="bindLoadingNew"
     refresher-triggered ="{{isMoveToUp}}" 
+    scroll-top='{{topNum}}'
     bounces>
     <view>
       <view wx:for="{{loadList}}"  wx:key="index">
@@ -57,7 +58,7 @@
         </view>
       </view>
       <van-divider />
-      <view class="todayNoData" wx:if="{{index == 0 && item == null}}">
+      <view class="todayNoData" wx:if="{{index == 0 && item.list.length == 0}}">
         <image src="{{nodata}}" mode="aspectFill"  />
         <view class="text">今日还没有记录 赶快记下今日的收支状况吧!</view>
         <van-button plain type="info" class="btn" round bind:click="goAdd">去记一笔</van-button>
@@ -71,7 +72,6 @@
               <view class="where smallWord">{{item.where}}</view>
             </view>
           </view>
-    
           <view class="rg {{item.isIncome && 'red'}}">{{item.isIncome ? '+' : '-'}}{{item.money}}</view> 
         </view>
       </view>

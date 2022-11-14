@@ -1,5 +1,6 @@
 import moment from "moment";
 var app = getApp();
+import dayjs from 'dayjs'
 // import "moment/locale/zh-cn";
 // pages/chooseTime/index.ts
 Page({
@@ -8,8 +9,9 @@ Page({
    * 页面的初始数据
    */
   data: {
+    dayMin: dayjs().subtract(1, 'year').valueOf(),
     calendarType: ['single','multiple', 'range'],
-    currType: '', // 父组件接受到的当前选择类型
+    currType: app.globalData.chooseTimeGlobal.type, // 父组件接受到的当前选择类型
     currentDate: new Date().getTime(),
     minDate: app.globalData.createTime,
     maxDate: new Date().getTime(),
@@ -25,7 +27,7 @@ Page({
         className: "column2"
       }
     ], // 周选择器
-    defaultsTime: '', // 接受父组件的时间
+    defaultsTime:  dayjs(app.globalData.chooseTimeGlobal.value).valueOf(), // 接受父组件的时间
     formatter(type, value) {
       if (type === 'year') {
         return `${value}年`;
@@ -44,6 +46,16 @@ Page({
     console.log(options,app.globalData, 'options')
     const arr = options.id.split('#')
     console.log(arr, moment(JSON.parse(arr[1]).value).valueOf(), 'hh');
+    const {chooseTimeGlobal} = app.globalData
+    if(chooseTimeGlobal.type == 0) {
+      console.log('jinlailema ');
+      this.setData({
+        currType: chooseTimeGlobal.type,
+        defaultsTime: dayjs(chooseTimeGlobal.value).valueOf(),
+        // dayMin: chooseTimeGlobal.createTime
+      })
+      return
+    }
     this.setData({
       currType: arr[0],
       defaultsTime: JSON.parse(arr[1]).value

@@ -32,6 +32,7 @@
   margin: 10px auto;
   text-align: center;
   color: #929090;
+  font-size: 14px;
 }
 .nodata {
   width: 100%;

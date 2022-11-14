@@ -1,7 +1,7 @@
 <view class="pageMain"> 
 <!-- 日选择器 -->
   <van-calendar
-    min-date="1656060049445"
+    min-date="{{dayMin}}"
     title="选择时间（日）"
     poppable="{{ false }}"
     show-confirm="{{ false }}"

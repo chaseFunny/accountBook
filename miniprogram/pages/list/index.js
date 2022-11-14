@@ -10,6 +10,7 @@ import { weekMap, formatNum, defaultIncomeWay } from '../../utils/format';
 // @ts-ignore
 Component({
   data: {
+    topNum: 0,
     nodata:'../../images/colorfulPng/noData.jpg',
     isNew: false,
     show: false,
@@ -60,24 +61,29 @@ Component({
       })
     },
     /** 滚动底部 */
-    async lower(e){
+    async lower(e){ 
+
       if(this.data.isRequestNext){
         await this.setData({
           offset: this.data.size + this.data.offset
         })
+        await this.getDate({})
       }else{
         Toast('已经到底啦~');
       }
     },
     /** 下拉在加载 */
     async bindLoadingNew(e){
+      console.log(e, 'jinlaile');
       await this.setData({
         offset: 0,
-        currRecordType: '收支记录'
+        currRecordType: '收支记录',
+        isNew: false
       }) 
       await this.getDate({})
       await this.setData({
-        isMoveToUp: false
+        isMoveToUp: false,
+        isRequestNext: true,
       })
     },
     /** 获取时间差 */
@@ -158,12 +164,15 @@ Component({
       })
     },
     /** 调用接口，获取数据 */
-    async getDate(obj) {
+    async getDate(obj, flag= true) {
+      console.log(obj, '调用接口');
       const {offset, size} = this.data
       const that = this
       const searchObj = {userID: wx.getStorageSync('openid')}
-      listCol.where(Object.assign({},searchObj,obj)).skip(offset).limit(size).get().then(res=>{
+      listCol.where(Object.assign({},searchObj,obj)).orderBy('recordTime', 'desc').skip(offset).limit(size).get().then(res=>{
         const {isNew} = this.data
+        const aa = res.data.map((ele)=>({...ele,recordTime: new Date(ele.recordTime)}))
+        console.log(aa,'res');
         if(res.data.length >= 0) {
           // 当数据不足20条，下拉就提醒到底了
           if(res.data.length < 20) {
@@ -171,16 +180,20 @@ Component({
               isRequestNext: false
             })
           }
-          if(!isNew){
+          if(isNew && flag){
             this.setData({
               dataList: [...that.data.dataList, ...res.data]
             })
             this.formatData([...that.data.dataList, ...res.data])
           }else{
+            console.log('111112');
             this.setData({
               dataList: [...res.data]
             })
             this.formatData([...res.data])
+            this.setData({
+              isNew: true
+            })
           }
         }else{
           Toast.fail('数据为空');
@@ -243,10 +256,15 @@ Component({
   },
   pageLifetimes: {
     show() {
-      this.data.isNew = true;
       // 获取数据
       // setTimeout(()=>, 20)
-      this.getDate({})
+      this.setData({
+        offset: 0,
+        isRequestNext: true,
+        isMoveToUp: false,
+        topNum:0
+      })
+      this.getDate({}, false)
       if (typeof this.getTabBar === 'function' &&
         this.getTabBar()) {
         this.getTabBar().setData({

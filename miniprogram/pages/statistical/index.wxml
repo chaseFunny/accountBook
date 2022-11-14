@@ -1,5 +1,6 @@
 <!--pages/statistical/index.wxml-->
 <view class="pageMain" style="background: #408ce2;">
+  <van-notify id="van-notify" />
   <view class="dateChoose">
     <van-tabs active="{{ active }}" bind:change="onChange" class="lf">
       <van-tab title="{{item.val}}" wx:for="{{dateList}}" wx:key="key" id="{{item.key}}"></van-tab>
@@ -22,4 +23,5 @@
       <f2 onRender="{{onRenderChart}}"  />
     </cover-view>
   </view>
+  <van-toast id="van-toast" />
 </view>

@@ -1,6 +1,8 @@
 import { createElement } from '@antv/f2';
 import Chart from './chart';
 import dayjs from 'dayjs'
+import Toast from '@vant/weapp/toast/toast';
+import Notify from '@vant/weapp/notify/notify';
 const db =wx.cloud.database()
 const _ = db.command
 const $ = db.command.aggregate
@@ -18,9 +20,10 @@ const data1 = [
 Component({
   data: {
     chartData: data1,
+    chartDataCurr: [],
     onRenderChart: () => {},
     caleIconUrl: '../../images/iconPng/calendar.png',
-    currChoose: '0',
+    currChoose: 0,
     dateList: [
       {key: 0, val: '按日'},
       // {key: 1, val: '按周'},
@@ -38,7 +41,7 @@ Component({
   ready() {
     this.setData({
       onRenderChart: () => {
-        return this.renderChart(data1);
+        return this.renderChart(data1.reverse());
       }
     }); // 模拟数据更新
     // setTimeout(() => {
@@ -61,26 +64,37 @@ Component({
     // 时间类型切换
     onChange(e){
       const {chooseTimeGlobal} = app.globalData
-      console.log(e, 'tab');
-      this.setData({
-        currDateType: e.detail.index
-      })
       if( e.detail.index == 0){
         this.setData({
+          currDateType: e.detail.index,
           currDate: dayjs(chooseTimeGlobal.value).format('MM月DD日')
         })
       }
-      if( e.detail.index == 1){
-        this.setData({
-          currDate: dayjs(chooseTimeGlobal.value).format('YYYY年MM月')
-        })
+      else{
+        // Toast('开发中~');
+        Notify({ type: 'primary', message: '开发中~' });
+        return
       }
+      // if( e.detail.index == 1){
+      //   this.setData({
+      //     currDate: dayjs(chooseTimeGlobal.value).format('YYYY年MM月')
+      //   })
+      // }
     },
     switch(e){
-      console.log(e, 'switch');
+      const {chartDataCurr} = this.data
+      const arr = [
+        [...chartDataCurr],
+        [chartDataCurr[0], chartDataCurr[2], chartDataCurr[4]],
+        [chartDataCurr[1], chartDataCurr[3], chartDataCurr[5]],
+      ]
+      console.log(arr[e.currentTarget.id], '哈哈哈');
       this.setData({
-        currChoose: e.currentTarget.id
-      })
+        currChoose: e.currentTarget.id,
+        onRenderChart: () => {
+          return this.renderChart(arr[e.currentTarget.id]);
+        }
+      });
     },
     showTimePicker(){
       wx.navigateTo({
@@ -95,7 +109,6 @@ Component({
     },
     /** 获取数据 */
     getChartData (beginTime, endTime){
-      console.log(dayjs(beginTime).date(), dayjs(endTime).date(), '开始结束');
       const _this = this
       return wx.cloud.callFunction({
         name:'getDataByTime',
@@ -126,16 +139,16 @@ Component({
       arr.forEach(ele=>{
         // 先判断是哪一天，再判断是收入还是支出，得出index
         const gapNum = todayNum - dayjs(ele.recordTime).date()
-        console.log(todayNum, dayjs(ele.recordTime).date(), '时间');
-        if(ele.isIncome) {
+        if(!ele.isIncome) {
           arr1[gapNum*2].sold += +ele.money
         }else{
           arr1[1+gapNum*2].sold += +ele.money
         }
       })
       this.setData({
+        chartDataCurr: arr1.reverse(),
         onRenderChart: () => {
-          return this.renderChart(arr1.reverse());
+          return this.renderChart(arr1);
         }
       });
       return arr1
@@ -143,14 +156,14 @@ Component({
   },
   pageLifetimes: {
     show() {
-      const {currDateType, currChoose} = this.data
+      // const {currDateType, currChoose} = this.data
       const {chooseTimeGlobal} = app.globalData
-      const id = wx.getStorageSync('openid');
-      console.log(app.globalData, 'tongji');
-      const that = this
+      // const id = wx.getStorageSync('openid');
+      // const that = this
       if(chooseTimeGlobal.type == 0){
         this.setData({
-          currDate: dayjs(chooseTimeGlobal.value).format('MM月DD日')
+          currDate: dayjs(chooseTimeGlobal.value).format('MM月DD日'),
+          currChoose: 0
         })
         this.getChartData(
           dayjs(chooseTimeGlobal.value).subtract(2, 'day').startOf('date').valueOf(),

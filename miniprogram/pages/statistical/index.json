@@ -1,7 +1,9 @@
 {
   "usingComponents": {
     "f2": "@antv/f2-wx",
+    "van-toast": "@vant/weapp/toast/index",
     "van-tab": "@vant/weapp/tab/index",
-    "van-tabs": "@vant/weapp/tabs/index"
+    "van-tabs": "@vant/weapp/tabs/index",
+    "van-notify": "@vant/weapp/notify/index"
   }
 }
